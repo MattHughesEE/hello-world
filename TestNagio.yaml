@@ -4,7 +4,7 @@
   
   tasks:
   
-  - name: Install the Prerequisite packages
+  - name: Install the CORE prereqs
     become: yes
     yum:
       name:
@@ -12,14 +12,33 @@
         - glibc
         - glibc-common
         - perl
-        - unzip
+        - httpd
+        - php
         - wget
+        - unzip
         - httpd
         - php
         - gd
         - gd-devel
         - perl
         - postfix
+   
+  - name: Install the Prerequisite packages
+    become: yes
+    yum:
+      name:
+        #- gcc
+        #- glibc
+        #- glibc-common
+        #- perl
+        #- unzip
+        #- wget
+        #- httpd
+        #- php
+        #- gd
+        #- gd-devel
+        #- perl
+        #- postfix
         - gettext
         - autoconf
         - automake
@@ -28,7 +47,72 @@
         - net-snmp
         - net-snmp-utils
         - perl-Net-SNMP
+        - ntp
+        - libdbi-devel
       state: present
+      
+  - name: Download the source
+    become: yes
+    get_url:
+      #url: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+      url: https://github.com/NagiosEnterprises/nagioscore/archive/nagios-4.4.5.tar.gz
+      dest: /opt/
+      
+  - name: Unarchive
+    unarchive:
+    become: yes
+      src: /home/mrh/nagioscore-nagios-4.4.5.tar.gz
+      dest: /opt/
+      remote_src: yes
+      
+  - name: Compile
+    shell: ./configure
+    become: yes
+    args:
+      chdir: /opt/nagioscore-nagios-4.4.5/
+      
+  - name: Make all
+    shell: make all
+    become: yes
+    args:
+      chdir: /opt/nagioscore-nagios-4.4.5/
+      
+  - name: Create Users and Groups
+    shell: make install-groups-users
+    become: yes
+    args:
+      chdir: /opt/nagioscore-nagios-4.4.5/
+      
+  - name: User Mod
+    shell: usermod -a -G nagios apache
+    become: yes
+    args:
+      chdir: /opt/nagioscore-nagios-4.4.5/
+      
+  - name: make install
+    shell: make install
+    become: yes
+    args:
+      chdir: /opt/nagioscore-nagios-4.4.5/
+  
+  - name: make install daemoninit
+    shell: make install-daemoninit
+    become: yes
+    args:
+      chdir: /opt/nagioscore-nagios-4.4.5/
+      
+  - name: System cty
+    shell: systemctl enable httpd.service
+    become: yes
+    args:
+      chdir: /opt/nagioscore-nagios-4.4.5/
+      
+  - name: Install command mode
+    shell: make isntall-commandmode
+    become: yes
+    args:
+      chdir: /opt/nagioscore-nagios-4.4.5/
+   
       
   - name: Subscription Manager
     become: yes
@@ -52,19 +136,14 @@
     args:
       chdir: /tmp/
     when: output is failed
-   
-  - name: Download the source
-    become: yes
-    get_url:
-      #url: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-      url: https://github.com/NagiosEnterprises/nagioscore/archive/nagios-4.4.5.tar.gz
-      dest: /opt/
       
-  - name: Download and Unarchive
-    unarchive:
-      src: /home/mrh/nagioscore-nagios-4.4.5.tar.gz
-      dest: /opt/
-      remote_src: yes
+  - name: Optional Repos
+    become: yes
+    shell: "subscription-manager repos --enable=rhel-7-server-optional-rpms"
+    
+    
+  - name: 
+    
       
   #- name:
     #become: yes
