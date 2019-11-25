@@ -61,7 +61,7 @@
   - name: Unarchive
     unarchive:
     become: yes
-      src: /home/mrh/nagioscore-nagios-4.4.5.tar.gz
+      src: /opt/nagioscore-nagios-4.4.5.tar.gz
       dest: /opt/
       remote_src: yes
       
