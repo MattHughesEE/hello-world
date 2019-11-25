@@ -108,11 +108,29 @@
       chdir: /opt/nagioscore-nagios-4.4.5/
       
   - name: Install command mode
-    shell: make isntall-commandmode
+    shell: make install-commandmode
     become: yes
     args:
       chdir: /opt/nagioscore-nagios-4.4.5/
-   
+      
+  - name: Install command mode
+    shell: make install-webconf
+    become: yes
+    args:
+      chdir: /opt/nagioscore-nagios-4.4.5/
+      
+  - name: Firewall rule changes
+    shell: firewall-cmd --zone=public --add-port=80/tcp
+    become: yes
+    args:
+      chdir: /opt/nagioscore-nagios-4.4.5/
+      
+  - name: Firewall rule changes
+    shell: firewall-cmd --zone=public --add-port=80/tcp --permanent
+    become: yes
+    args:
+      chdir: /opt/nagioscore-nagios-4.4.5/
+      
       
   - name: Subscription Manager
     become: yes
