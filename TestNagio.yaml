@@ -20,19 +20,44 @@
         - gd-devel
         - perl
         - postfix
+        - gettext
+        - autoconf
+        - automake
+        - make
+        - openssl-devel
+        - net-snmp
+        - net-snmp-utils
+        - perl-Net-SNMP
       state: present
+      
+  - name: Subscription Manager
+    become: yes
+    shell: "subscription-manager repos --enable=rhel-7-server-optional-rpms"
+      
+  - name: Wget dl fedora
+    become: yes
+    get_url:
+      url: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+      dest: /tmp/
+   
+  - name: RPM
+    shell: rpm -ihv epel-release-latest-7.noarch.rpm
+    args:
+      chdir: /tmp/
+    
+      
 
   - name: Download the source
     become: yes
     get_url:
       #url: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
       url: https://github.com/NagiosEnterprises/nagioscore/archive/nagios-4.4.5.tar.gz
-      dest: /home/mrh/
+      dest: /opt/
       
   - name: Download and Unarchive
     unarchive:
       src: /home/mrh/nagioscore-nagios-4.4.5.tar.gz
-      dest: /home/mrh/
+      dest: /opt/
       remote_src: yes
       
   #- name:
