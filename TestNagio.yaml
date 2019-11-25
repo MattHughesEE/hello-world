@@ -177,6 +177,12 @@
     become: yes
     shell: "subscription-manager repos --enable=rhel-7-server-optional-rpms"
     
+  - name: Start Apache Webserver
+    become: yes
+    service:
+      name: httpd
+      state: started
+    
       
   #- name:
     #become: yes
