@@ -31,7 +31,7 @@
       
   - name: Download and Unarchive
     unarchive:
-      src: https://github.com/NagiosEnterprises/nagioscore/archive/nagios-4.4.5.tar.gz
+      src: nagioscore-nagios-4.4.5.tar.gz
       dest: /home/mrh/
       
   #- name:
