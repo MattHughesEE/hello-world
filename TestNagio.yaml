@@ -39,6 +39,13 @@
     get_url:
       url: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
       dest: /tmp/
+      
+  - name: Check if epel latest alrteady installed
+    become: yes
+    shell: "rpm -qa"
+    register: output
+  - debug:
+    var=output
    
   - name: RPM
     shell: rpm -ihv epel-release-latest-7.noarch.rpm
