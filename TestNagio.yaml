@@ -8,6 +8,7 @@
     become: yes
     yum:
       name:
+        - pexpect
         - gcc
         - glibc
         - glibc-common
