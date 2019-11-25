@@ -11,12 +11,20 @@
         - gcc
         - glibc
         - glibc-common
-        - perl
+        - wget
+        - unzip
         - httpd
         - php
-        - wget
         - gd
         - gd-devel
+        - perl
+        - postfix 
+        #- perl
+        #- httpd
+        #- php
+        #- wget
+        #- gd
+        #- gd-devel
       state: installed
       
   - name: Download the source
