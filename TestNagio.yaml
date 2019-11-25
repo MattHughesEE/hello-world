@@ -45,7 +45,7 @@
     shell: "rpm -qa"
     register: output
   - debug:
-    var=output
+      var=output
    
   - name: RPM
     shell: rpm -ihv epel-release-latest-7.noarch.rpm
