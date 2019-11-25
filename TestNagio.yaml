@@ -25,7 +25,7 @@
   - name: Download the source
     become: yes
     get_url:
-      url: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+      #url: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
       url: https://github.com/NagiosEnterprises/nagioscore/archive/nagios-4.4.5.tar.gz
       dest: /home/mrh/
       
