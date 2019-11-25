@@ -117,9 +117,9 @@
     become: yes
     shell: htpasswd -bc /usr/local/nagios/htpasswd.users nagiosadmin admin
       
-  - name: Subscription Manager
-    become: yes
-    shell: "subscription-manager repos --enable=rhel-7-server-optional-rpms"
+  #- name: Subscription Manager
+    #become: yes
+    #shell: "subscription-manager repos --enable=rhel-7-server-optional-rpms"
       
   - name: Wget dl fedora
     become: yes
