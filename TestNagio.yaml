@@ -130,6 +130,7 @@
   - name: Check if epel latest alrteady installed
     become: yes
     shell: "rpm -qa | grep epel"
+    ignore_errors: yes
     register: output
   - debug:
       var=output
