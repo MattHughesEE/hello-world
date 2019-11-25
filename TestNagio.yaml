@@ -182,7 +182,12 @@
     service:
       name: httpd
       state: started
-    
+   
+  - name: Start Service Daemon
+    become: yes
+    service:
+      name: nagios
+      state: started
       
   #- name:
     #become: yes
