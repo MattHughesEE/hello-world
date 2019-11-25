@@ -42,7 +42,7 @@
       
   - name: Check if epel latest alrteady installed
     become: yes
-    shell: "rpm -qa"
+    shell: "rpm -qa | grep epel"
     register: output
   - debug:
       var=output
@@ -51,9 +51,8 @@
     shell: rpm -ihv epel-release-latest-7.noarch.rpm
     args:
       chdir: /tmp/
-    
-      
-
+    when: output is failed
+   
   - name: Download the source
     become: yes
     get_url:
