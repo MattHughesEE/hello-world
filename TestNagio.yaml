@@ -131,15 +131,29 @@
     become: yes
     args:
       chdir: /opt/nagioscore-nagios-4.4.5/
-      
+   
   - name: Create Nagios Admin User Account
     become: yes
-    expect:
-      command: httpd -c /usr/local/nagios/htpasswd.users nagiosadmin
-      responses:
-        Question:
-          - admin!
-          - admin!
+    shell: |
+      httpd -c /usr/local/nagios/htpasswd.users nagiosadmin
+      
+      expect "password:"
+      send "admin"
+      
+      expect "password:"
+      send "admin"
+    args:
+      chdir: /opt/nagioscore-nagios-4.4.5/
+    
+      
+  #- name: Create Nagios Admin User Account
+    #become: yes
+    #expect:
+      #command: httpd -c /usr/local/nagios/htpasswd.users nagiosadmin
+      #responses:
+        #Question:
+          #- admin!
+          #- admin!
     
       
       
