@@ -8,7 +8,6 @@
     become: yes
     yum:
       name:
-        - pexpect
         - gcc
         - glibc
         - glibc-common
@@ -16,41 +15,9 @@
         - httpd
         - php
         - wget
-        - unzip
-        - httpd
-        - php
         - gd
         - gd-devel
-        - perl
-        - postfix
-   
-  - name: Install the Prerequisite packages
-    become: yes
-    yum:
-      name:
-        #- gcc
-        #- glibc
-        #- glibc-common
-        #- perl
-        #- unzip
-        #- wget
-        #- httpd
-        #- php
-        #- gd
-        #- gd-devel
-        #- perl
-        #- postfix
-        - gettext
-        - autoconf
-        - automake
-        - make
-        - openssl-devel
-        - net-snmp
-        - net-snmp-utils
-        - perl-Net-SNMP
-        - ntp
-        - libdbi-devel
-      state: present
+      state: installed
       
   - name: Download the source
     become: yes
