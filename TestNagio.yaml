@@ -31,8 +31,9 @@
       
   - name: Download and Unarchive
     unarchive:
-      src: nagioscore-nagios-4.4.5.tar.gz
+      src: /home/mrh/nagioscore-nagios-4.4.5.tar.gz
       dest: /home/mrh/
+      remote_src: yes
       
   #- name:
     #become: yes
