@@ -89,6 +89,12 @@
     args:
       chdir: /opt/nagioscore-nagios-4.4.5/
       
+  - name: Make install config
+    shell: make install-config
+    become: yes
+    args:
+      chdir: /opt/nagioscore-nagios-4.4.5/
+      
   - name: Install command mode
     shell: make install-webconf
     become: yes
@@ -128,26 +134,27 @@
   #- name: Subscription Manager
     #become: yes
     #shell: "subscription-manager repos --enable=rhel-7-server-optional-rpms"
+  
+  #####PLUGINS?#####    
+  #- name: Wget dl fedora
+    #become: yes
+    #get_url:
+      #url: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+      #dest: /tmp/
       
-  - name: Wget dl fedora
-    become: yes
-    get_url:
-      url: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-      dest: /tmp/
-      
-  - name: Check if epel latest alrteady installed
-    become: yes
-    shell: "rpm -qa | grep epel"
-    ignore_errors: yes
-    register: output
-  - debug:
-      var=output
+  #- name: Check if epel latest alrteady installed
+    #become: yes
+    #shell: "rpm -qa | grep epel"
+    #ignore_errors: yes
+    #register: output
+  #- debug:
+      #var=output
    
-  - name: RPM
-    shell: rpm -ihv epel-release-latest-7.noarch.rpm
-    args:
-      chdir: /tmp/
-    when: output is failed
+  #- name: RPM
+    #shell: rpm -ihv epel-release-latest-7.noarch.rpm
+    #args:
+      #chdir: /tmp/
+    #when: output is failed
       
   #- name: Optional Repos
     #become: yes
