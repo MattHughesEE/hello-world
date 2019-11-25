@@ -141,9 +141,9 @@
       chdir: /tmp/
     when: output is failed
       
-  - name: Optional Repos
-    become: yes
-    shell: "subscription-manager repos --enable=rhel-7-server-optional-rpms"
+  #- name: Optional Repos
+    #become: yes
+    #shell: "subscription-manager repos --enable=rhel-7-server-optional-rpms"
     
   - name: Start Apache Webserver
     become: yes
