@@ -1,26 +1,31 @@
 ---
-- name: Install the Prerequisite packages
-  become: yes
-  yum:
-    name:
-      - gcc
-      - glibc
-      - glibc-common
-      - perl
-      - unzip
-      - wget
-      - httpd
-      - php
-      - gd
-      - gd-devel
-      - perl
-      - postfix
-    state: present
+- name: Adding a new user without Args
+  hosts: all
+  
+  tasks:
+  
+  - name: Install the Prerequisite packages
+    become: yes
+    yum:
+      name:
+        - gcc
+        - glibc
+        - glibc-common
+        - perl
+        - unzip
+        - wget
+        - httpd
+        - php
+        - gd
+        - gd-devel
+        - perl
+        - postfix
+      state: present
 
-- name: Download and Unarchive
-  unarchive:
-    src: https://github.com/NagiosEnterprises/nagioscore/archive/nagios-4.4.5.tar.gz
-    dest: /opt/
+  - name: Download and Unarchive
+    unarchive:
+      src: https://github.com/NagiosEnterprises/nagioscore/archive/nagios-4.4.5.tar.gz
+      dest: /opt/
 
 #- name: Download the source
   #become: yes
