@@ -141,9 +141,6 @@
     become: yes
     shell: "subscription-manager repos --enable=rhel-7-server-optional-rpms"
     
-    
-  - name: 
-    
       
   #- name:
     #become: yes
