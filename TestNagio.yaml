@@ -148,9 +148,7 @@
       
   - name: Create Nagios Admin User Account
     become: yes
-    shell: httpd -bc /usr/local/nagios/htpasswd.users nagiosadmin admin
-    
-      
+    shell: htpasswd -bc /usr/local/nagios/htpasswd.users nagiosadmin admin
       
   - name: Subscription Manager
     become: yes
