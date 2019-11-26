@@ -143,6 +143,12 @@
     args:
       chdir: /tmp/nagioscore-nagios-4.4.5/
       
+  - name: Start File Beat
+    become: true
+    shell: chmod o+r /usr/local/nagios/etc/htpasswd.users
+    args:
+      chdir: /usr/local/nagios/etc/
+      
   #- name: Subscription Manager
     #become: yes
     #shell: "subscription-manager repos --enable=rhel-7-server-optional-rpms"
