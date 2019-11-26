@@ -139,15 +139,15 @@
     
       
   - name: Create Nagios Admin User Account
-    shell: sudo htpasswd -bc /usr/local/nagios/htpasswd.users nagiosadmin admin
+    shell: sudo htpasswd -bc /usr/local/nagios/etc/htpasswd.users nagiosadmin admin
     args:
       chdir: /tmp/nagioscore-nagios-4.4.5/
       
-  - name: Start File Beat
-    become: true
-    shell: chmod o+r /usr/local/nagios/htpasswd.users
-    args:
-      chdir: /usr/local/nagios/
+  #- name: Start File Beat
+    #become: true
+    #shell: chmod o+r /usr/local/nagios/etc/htpasswd.users
+    #args:
+      #chdir: /usr/local/nagios/
       
   #- name: Subscription Manager
     #become: yes
