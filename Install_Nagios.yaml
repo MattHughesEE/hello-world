@@ -19,6 +19,13 @@
         - perl
         - postfix
         - ntp
+        - make
+        - gettext
+        - automake 
+        - autoconf
+        - openssl-devel
+        - net-snmp
+        - net-snmp-utils
       state: installed
       
   - name: Download the source
@@ -108,6 +115,37 @@
       state: started
       
 ############ CHECK_MK ###############
+  
+  - name: dl fedora project
+    get_url:
+      url: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+      dest: /tmp/
+      
+  - name: Unarchive
+    unarchive:
+      src: /tmp/epel-release-latest-7.noarch.rpm
+      dest: tmp
+      
+      
+  - name: Subscription Manager
+    shell: "subscription-manager repos --enable=rhel-7-server-optional-rpms"
+    
+  - name: Yum install
+    yum:
+      name:
+        - make
+        - gettext
+        - automake 
+        - autoconf
+        - openssl-devel
+        - net-snmp
+        - net-snmp-utils
+      state: installed
+      
+  - name:
+    yum:
+      name:
+        - perl-Net_SNMP
 
   - name: Check Service NTP status
     service:
@@ -126,13 +164,13 @@
   - name: Reload firewall
     shell: firewall-cmd --reload
    
-  - name: Install EPEL
-    shell: yum install epel-release
-    become: true
-  #- name: Install epel-release via yum
-    #yum:
-      #name: epel-release
-      #state: installed
+  #- name: Install EPEL
+    #shell: yum install epel-release
+    #become: true
+  - name: Install epel-release via yum
+    yum:
+      name: epel-release
+      state: installed
       
   #- name: Get Check_MK
     #get_url:
