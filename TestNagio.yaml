@@ -36,18 +36,27 @@
         #- ntp
         #- libdbi-devel
       state: present
+    become: true
+    become_method: su
+    become_user: root
       
   - name: Download the source
     get_url:
       #url: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
       url: https://github.com/NagiosEnterprises/nagioscore/archive/nagios-4.4.5.tar.gz
       dest: /tmp/
-      
+    become: true
+    become_method: su
+    become_user: root
+    
   - name: Unarchive
     unarchive:
       src: /tmp/nagioscore-nagios-4.4.5.tar.gz
       dest: /tmp/
       remote_src: yes
+    become: true
+    become_method: su
+    become_user: root
       
   - name: Compile
     shell: ./configure
