@@ -1,9 +1,9 @@
 ---
 - name: Adding a new user without Args
   hosts: all
-  ansible_become: true
-  ansible_become_method: su
-  ansible_become_user: root
+  #ansible_become: true
+  #ansible_become_method: su
+  #ansible_become_user: root
   tasks:
   
   - name: Install the CORE prereqs
