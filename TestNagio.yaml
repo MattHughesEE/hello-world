@@ -29,6 +29,11 @@
         - automake
         - make
         - openssl-devel
+        - net-snmp
+        - net-snmp-utils
+        - perl-Net-SNMP
+        - ntp
+        - libdbi-devel
       state: installed
       
   - name: Download the source
