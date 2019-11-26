@@ -41,86 +41,86 @@
     get_url:
       #url: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
       url: https://github.com/NagiosEnterprises/nagioscore/archive/nagios-4.4.5.tar.gz
-      dest: /opt/
+      dest: /tmp/
       
   - name: Unarchive
     become: yes
     unarchive:
-      src: /opt/nagioscore-nagios-4.4.5.tar.gz
-      dest: /opt/
+      src: /tmp/nagioscore-nagios-4.4.5.tar.gz
+      dest: /tmp/
       remote_src: yes
       
   - name: Compile
     shell: ./configure
     become: yes
     args:
-      chdir: /opt/nagioscore-nagios-4.4.5/
+      chdir: /tmp/nagioscore-nagios-4.4.5/
       
   - name: Make all
     shell: make all
     become: yes
     args:
-      chdir: /opt/nagioscore-nagios-4.4.5/
+      chdir: /tmp/nagioscore-nagios-4.4.5/
       
   - name: Create Users and Groups
     shell: make install-groups-users
     become: yes
     args:
-      chdir: /opt/nagioscore-nagios-4.4.5/
+      chdir: /tmp/nagioscore-nagios-4.4.5/
       
   - name: User Mod
     shell: usermod -a -G nagios apache
     become: yes
     args:
-      chdir: /opt/nagioscore-nagios-4.4.5/
+      chdir: /tmp/nagioscore-nagios-4.4.5/
       
   - name: make install
     shell: make install
     become: yes
     args:
-      chdir: /opt/nagioscore-nagios-4.4.5/
+      chdir: /tmp/nagioscore-nagios-4.4.5/
   
   - name: make install daemoninit
     shell: make install-daemoninit
     become: yes
     args:
-      chdir: /opt/nagioscore-nagios-4.4.5/
+      chdir: /tmp/nagioscore-nagios-4.4.5/
       
   - name: System cty
     shell: systemctl enable httpd.service
     become: yes
     args:
-      chdir: /opt/nagioscore-nagios-4.4.5/
+      chdir: /tmp/nagioscore-nagios-4.4.5/
       
   - name: Install command mode
     shell: make install-commandmode
     become: yes
     args:
-      chdir: /opt/nagioscore-nagios-4.4.5/
+      chdir: /tmp/nagioscore-nagios-4.4.5/
       
   - name: Make install config
     shell: make install-config
     become: yes
     args:
-      chdir: /opt/nagioscore-nagios-4.4.5/
+      chdir: /tmp/nagioscore-nagios-4.4.5/
       
   - name: Install command mode
     shell: make install-webconf
     become: yes
     args:
-      chdir: /opt/nagioscore-nagios-4.4.5/
+      chdir: /tmp/nagioscore-nagios-4.4.5/
       
   - name: Firewall rule changes
     shell: firewall-cmd --zone=public --add-port=80/tcp
     become: yes
     args:
-      chdir: /opt/nagioscore-nagios-4.4.5/
+      chdir: /tmp/nagioscore-nagios-4.4.5/
       
   - name: Firewall rule changes
     shell: firewall-cmd --zone=public --add-port=80/tcp --permanent
     become: yes
     args:
-      chdir: /opt/nagioscore-nagios-4.4.5/
+      chdir: /tmp/nagioscore-nagios-4.4.5/
    
   #- name: Create Nagios Admin User Account
     #become: yes
@@ -139,6 +139,8 @@
   - name: Create Nagios Admin User Account
     become: yes
     shell: htpasswd -bc /usr/local/nagios/htpasswd.users nagiosadmin admin
+    args:
+      chdir: /tmp/nagioscore-nagios-4.4.5/
       
   #- name: Subscription Manager
     #become: yes
