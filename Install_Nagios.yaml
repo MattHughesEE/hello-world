@@ -108,21 +108,31 @@
       state: started
       
 ############ CHECK_MK ###############
-  
-  - name: dl fedora project
+
+  - name: Wget dl fedora
+    become: yes
     get_url:
       url: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
       dest: /tmp/
       
-  - name: Unarchive
-    unarchive:
-      src: /tmp/epel-release-latest-7.noarch.rpm
-      dest: /tmp/
-      remote_src: yes
+  - name: Check if epel latest alrteady installed
+    become: yes
+    shell: "rpm -qa | grep epel"
+    ignore_errors: yes
+    register: output
+  - debug:
+      var=output
+   
+  - name: RPM
+    shell: rpm -ihv epel-release-latest-7.noarch.rpm
+    args:
+      chdir: /tmp/
+    when: output is failed
       
-      
-  - name: Subscription Manager
+  - name: Optional Repos
+    become: yes
     shell: "subscription-manager repos --enable=rhel-7-server-optional-rpms"
+ 
     
   - name: Yum install
     yum:
