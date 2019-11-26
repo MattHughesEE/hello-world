@@ -19,13 +19,6 @@
         - perl
         - postfix
         - ntp
-        - make
-        - gettext
-        - automake 
-        - autoconf
-        - openssl-devel
-        - net-snmp
-        - net-snmp-utils
       state: installed
       
   - name: Download the source
@@ -125,6 +118,7 @@
     unarchive:
       src: /tmp/epel-release-latest-7.noarch.rpm
       dest: tmp
+      remote_src: yes
       
       
   - name: Subscription Manager
