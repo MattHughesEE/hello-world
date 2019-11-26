@@ -145,9 +145,9 @@
       
   - name: Start File Beat
     become: true
-    shell: chmod o+r /usr/local/nagios/etc/htpasswd.users
+    shell: chmod o+r /usr/local/nagios/htpasswd.users
     args:
-      chdir: /usr/local/nagios/etc/
+      chdir: /usr/local/nagios/
       
   #- name: Subscription Manager
     #become: yes
