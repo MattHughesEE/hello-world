@@ -117,7 +117,7 @@
   - name: Unarchive
     unarchive:
       src: /tmp/epel-release-latest-7.noarch.rpm
-      dest: tmp
+      dest: /tmp/
       remote_src: yes
       
       
