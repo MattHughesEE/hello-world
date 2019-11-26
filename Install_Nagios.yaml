@@ -198,6 +198,11 @@
   - debug:
       var=output2
       
+  - name: omd start
+    shell: omd start pdxmonitor
+    register: output3
+  - debug:
+      var=output3
       
       
 
