@@ -129,7 +129,7 @@
   - name: Install epel-release via yum
     yum:
       name: epel-release
-    state: installed
+      state: installed
       
   #- name: Get Check_MK
     #get_url:
