@@ -18,6 +18,7 @@
         - gd-devel
         - perl
         - postfix
+        - ntp
       state: installed
       
   - name: Download the source
@@ -106,3 +107,54 @@
       name: nagios
       state: started
       
+############ CHECK_MK ###############
+
+  - name: Check Service NTP status
+    service:
+      name: ntpd
+      state: started
+  
+  - name: Enable ntpd service
+    systemd:
+      name: ntpd
+      enabled: yes
+      masked: no
+      
+  - name: Add firewall-cmd for NTP
+    shell: firewall-cmd --add-service=ntp --zone=public --permanent
+  
+  - name: Reload firewall
+    shell: firewall-cmd --reload
+    
+  - name: Install epel-release via yum
+    yum:
+      name: epel-release
+    state: installed
+      
+  #- name: Get Check_MK
+    #get_url:
+      #url: https://mathias-kettner.de/support/1.5.0p12/check-mk-raw-1.5.0p12-el7-38.x86_64.rpm
+      #dest: /tmp/
+    
+  - name: YUM install Check_MK and all of the dependencies
+    yum:
+      name: check-mk-raw-1.5.0p12-el7-38.x86_64.rpm
+    state: installed
+    
+  - name: Check OMD version
+    shell: omd version
+    register: output
+  - debug:
+      var=output
+      
+  - name: Create Check_MK Server
+    shell: omd create pdxmonitor
+    register: output2
+  - debug:
+      var=output2
+      
+      
+      
+
+    
+   
