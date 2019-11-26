@@ -1,0 +1,108 @@
+---
+- name: Install Nagios and check_mk
+  hosts: all
+  become: true
+  tasks:
+  
+  - name: Install the CORE prereqs
+    yum:
+      name:
+        - gcc
+        - glibc
+        - glibc-common
+        - wget
+        - unzip
+        - httpd
+        - php
+        - gd
+        - gd-devel
+        - perl
+        - postfix
+      state: installed
+      
+  - name: Download the source
+    get_url:
+      url: https://github.com/NagiosEnterprises/nagioscore/archive/nagios-4.4.5.tar.gz
+      dest: /tmp/
+      
+  - name: Unarchive the nagios tar file
+    unarchive:
+      src: /tmp/nagioscore-nagios-4.4.5.tar.gz
+      dest: /tmp/
+      remote_src: yes
+      
+  - name: Compile (./configure)
+    shell: ./configure
+    args:
+      chdir: /tmp/nagioscore-nagios-4.4.5/
+      
+  - name: Make all
+    shell: make all
+    args:
+      chdir: /tmp/nagioscore-nagios-4.4.5/
+      
+  - name: Create Users and Groups
+    shell: make install-groups-users
+    args:
+      chdir: /tmp/nagioscore-nagios-4.4.5/
+      
+  - name: User Mod
+    shell: usermod -a -G nagios apache
+    args:
+      chdir: /tmp/nagioscore-nagios-4.4.5/
+      
+  - name: make install
+    shell: make install
+    args:
+      chdir: /tmp/nagioscore-nagios-4.4.5/
+      
+  - name: make install daemoninit
+    shell: make install-daemoninit
+    args:
+      chdir: /tmp/nagioscore-nagios-4.4.5/
+      
+  - name: Systemctl enable httpd service
+    shell: systemctl enable httpd.service
+    args:
+      chdir: /tmp/nagioscore-nagios-4.4.5/
+      
+  - name: Install command mode
+    shell: make install-commandmode
+    args:
+      chdir: /tmp/nagioscore-nagios-4.4.5/
+      
+  - name: Make install config
+    shell: make install-config
+    args:
+      chdir: /tmp/nagioscore-nagios-4.4.5/
+      
+   - name: Install webconf
+     shell: make install-webconf
+     args:
+       chdir: /tmp/nagioscore-nagios-4.4.5/
+      
+   - name: Firewall rule changes (Port 80)
+     shell: firewall-cmd --zone=public --add-port=80/tcp
+     args:
+       chdir: /tmp/nagioscore-nagios-4.4.5/
+      
+   - name: Firewall rule changes (Port 80 Permanent)
+     shell: firewall-cmd --zone=public --add-port=80/tcp --permanent
+     args:
+       chdir: /tmp/nagioscore-nagios-4.4.5/
+      
+   - name: Create Nagios Admin User Account
+     shell: sudo htpasswd -bc /usr/local/nagios/etc/htpasswd.users nagiosadmin admin
+     args:
+       chdir: /tmp/nagioscore-nagios-4.4.5/
+      
+   - name: Start Apache Webserver (httpd Service)
+    service:
+      name: httpd
+      state: started
+      
+   - name: Start Service Daemon (Nagios)
+     service:
+       name: nagios
+       state: started
+      
