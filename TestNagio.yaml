@@ -25,6 +25,10 @@
         #- wget
         #- gd
         #- gd-devel
+        - autoconf
+        - automake
+        - make
+        - openssl-devel
       state: installed
       
   - name: Download the source
