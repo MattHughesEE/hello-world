@@ -76,33 +76,33 @@
     args:
       chdir: /tmp/nagioscore-nagios-4.4.5/
       
-   - name: Install webconf
-     shell: make install-webconf
-     args:
-       chdir: /tmp/nagioscore-nagios-4.4.5/
+  - name: Install webconf
+    shell: make install-webconf
+    args:
+      chdir: /tmp/nagioscore-nagios-4.4.5/
       
-   - name: Firewall rule changes (Port 80)
-     shell: firewall-cmd --zone=public --add-port=80/tcp
-     args:
-       chdir: /tmp/nagioscore-nagios-4.4.5/
+  - name: Firewall rule changes (Port 80)
+    shell: firewall-cmd --zone=public --add-port=80/tcp
+    args:
+      chdir: /tmp/nagioscore-nagios-4.4.5/
       
-   - name: Firewall rule changes (Port 80 Permanent)
-     shell: firewall-cmd --zone=public --add-port=80/tcp --permanent
-     args:
-       chdir: /tmp/nagioscore-nagios-4.4.5/
+  - name: Firewall rule changes (Port 80 Permanent)
+    shell: firewall-cmd --zone=public --add-port=80/tcp --permanent
+    args:
+      chdir: /tmp/nagioscore-nagios-4.4.5/
       
-   - name: Create Nagios Admin User Account
-     shell: sudo htpasswd -bc /usr/local/nagios/etc/htpasswd.users nagiosadmin admin
-     args:
-       chdir: /tmp/nagioscore-nagios-4.4.5/
+  - name: Create Nagios Admin User Account
+    shell: sudo htpasswd -bc /usr/local/nagios/etc/htpasswd.users nagiosadmin admin
+    args:
+      chdir: /tmp/nagioscore-nagios-4.4.5/
       
-   - name: Start Apache Webserver (httpd Service)
+  - name: Start Apache Webserver (httpd Service)
     service:
       name: httpd
       state: started
       
-   - name: Start Service Daemon (Nagios)
-     service:
-       name: nagios
-       state: started
+  - name: Start Service Daemon (Nagios)
+    service:
+      name: nagios
+      state: started
       
