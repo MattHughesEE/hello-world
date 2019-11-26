@@ -192,9 +192,16 @@
   - debug:
       var=output
       
+  - name: Check OMD sites
+    shell: omd sites
+    register: out
+  - debug:
+      var=out
+      
   - name: Create Check_MK Server
     shell: omd create pdxmonitor
     register: output2
+    when: out is failed
   - debug:
       var=output2
       
