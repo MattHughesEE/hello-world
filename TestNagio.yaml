@@ -31,10 +31,9 @@
         - openssl-devel
         - net-snmp
         - net-snmp-utils
-        - perl-Net-SNMP
         - ntp
         - libdbi-devel
-      state: installed
+      state: present
       
   - name: Download the source
     become: yes
