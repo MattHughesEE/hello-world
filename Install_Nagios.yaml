@@ -125,11 +125,14 @@
   
   - name: Reload firewall
     shell: firewall-cmd --reload
-    
-  - name: Install epel-release via yum
-    yum:
-      name: epel-release
-      state: installed
+   
+  - name: Install EPEL
+    shell: yum install epel-release
+    become: true
+  #- name: Install epel-release via yum
+    #yum:
+      #name: epel-release
+      #state: installed
       
   #- name: Get Check_MK
     #get_url:
