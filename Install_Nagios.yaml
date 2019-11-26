@@ -149,7 +149,7 @@
   - name:
     yum:
       name:
-        - perl-Net_SNMP
+        - perl-Net-SNMP
 
   - name: Check Service NTP status
     service:
