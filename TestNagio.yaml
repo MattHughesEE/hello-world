@@ -37,8 +37,6 @@
         #- libdbi-devel
       state: present
     become: true
-    become_method: su
-    become_user: root
       
   - name: Download the source
     get_url:
@@ -46,8 +44,6 @@
       url: https://github.com/NagiosEnterprises/nagioscore/archive/nagios-4.4.5.tar.gz
       dest: /tmp/
     become: true
-    become_method: su
-    become_user: root
     
   - name: Unarchive
     unarchive:
@@ -55,68 +51,78 @@
       dest: /tmp/
       remote_src: yes
     become: true
-    become_method: su
-    become_user: root
       
   - name: Compile
     shell: ./configure
     args:
       chdir: /tmp/nagioscore-nagios-4.4.5/
+    become: true
       
   - name: Make all
     shell: make all
     args:
       chdir: /tmp/nagioscore-nagios-4.4.5/
+    become: true
       
   - name: Create Users and Groups
     shell: make install-groups-users
     args:
       chdir: /tmp/nagioscore-nagios-4.4.5/
+    become: true
       
   - name: User Mod
     shell: usermod -a -G nagios apache
     args:
       chdir: /tmp/nagioscore-nagios-4.4.5/
+    become: true
       
   - name: make install
     shell: make install
     args:
       chdir: /tmp/nagioscore-nagios-4.4.5/
+    become: true
   
   - name: make install daemoninit
     shell: make install-daemoninit
     args:
       chdir: /tmp/nagioscore-nagios-4.4.5/
+    become: true
       
   - name: System cty
     shell: systemctl enable httpd.service
     args:
       chdir: /tmp/nagioscore-nagios-4.4.5/
+    become: true
       
   - name: Install command mode
     shell: make install-commandmode
     args:
       chdir: /tmp/nagioscore-nagios-4.4.5/
+    become: true
       
   - name: Make install config
     shell: make install-config
     args:
       chdir: /tmp/nagioscore-nagios-4.4.5/
+    become: true
       
   - name: Install command mode
     shell: make install-webconf
     args:
       chdir: /tmp/nagioscore-nagios-4.4.5/
+    become: true
       
   - name: Firewall rule changes
     shell: firewall-cmd --zone=public --add-port=80/tcp
     args:
       chdir: /tmp/nagioscore-nagios-4.4.5/
+    become: true
       
   - name: Firewall rule changes
     shell: firewall-cmd --zone=public --add-port=80/tcp --permanent
     args:
       chdir: /tmp/nagioscore-nagios-4.4.5/
+    become: true
    
   #- name: Create Nagios Admin User Account
     #become: yes
@@ -136,6 +142,7 @@
     shell: htpasswd -bc /usr/local/nagios/htpasswd.users nagiosadmin admin
     args:
       chdir: /tmp/nagioscore-nagios-4.4.5/
+    become: true
       
   #- name: Subscription Manager
     #become: yes
@@ -170,11 +177,13 @@
     service:
       name: httpd
       state: started
+    become: true
    
   - name: Start Service Daemon
     service:
       name: nagios
       state: started
+    become: true
       
   #- name:
     #become: yes
