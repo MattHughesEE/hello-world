@@ -139,7 +139,7 @@
   - name: YUM install Check_MK and all of the dependencies
     yum:
       name: check-mk-raw-1.5.0p12-el7-38.x86_64.rpm
-    state: installed
+      state: installed
     
   - name: Check OMD version
     shell: omd version
