@@ -176,10 +176,10 @@
       name: epel-release
       state: installed
       
-  #- name: Get Check_MK
-    #get_url:
-      #url: https://mathias-kettner.de/support/1.5.0p12/check-mk-raw-1.5.0p12-el7-38.x86_64.rpm
-      #dest: /tmp/
+  - name: Get Check_MK
+    get_url:
+      url: https://mathias-kettner.de/support/1.5.0p12/check-mk-raw-1.5.0p12-el7-38.x86_64.rpm
+      dest: /tmp/
     
   - name: YUM install Check_MK and all of the dependencies
     yum:
