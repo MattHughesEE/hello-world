@@ -139,10 +139,9 @@
     
       
   - name: Create Nagios Admin User Account
-    shell: htpasswd -bc /usr/local/nagios/htpasswd.users nagiosadmin admin
+    shell: sudo htpasswd -bc /usr/local/nagios/htpasswd.users nagiosadmin admin
     args:
       chdir: /tmp/nagioscore-nagios-4.4.5/
-    become: true
       
   #- name: Subscription Manager
     #become: yes
