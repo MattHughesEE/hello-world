@@ -1,0 +1,57 @@
+---
+# Playbook to install nagios server and generate hosts/checks
+# This also installs NRPE on clients for more in-depth checks based on
+# Ansible inventory
+# author: Will Foster (@sadsfae)
+# https://hobo.house/2016/06/24/automate-nagios-deployment-with-ansible/
+
+- name: TEST NAGIO PLAYBOOK
+  hosts: all
+  
+  tasks:
+  - name: Check Operating System
+    fail:
+      msg="You're not running a supported operating system (CentOS or RHEL 7+)"
+    when: ((ansible_os_family != "RedHat") or (ansible_distribution_major_version|int < 7))
+
+  - name: Import EPEL GPG Key
+    rpm_key: key=https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7
+      state=present
+    become: true
+
+  - name: Check for EPEL repo
+    yum: name=https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+      state=present
+    become: true
+
+  - name: Install HTTPD and OpenSSL
+    yum:
+      name: ['httpd', 'httpd-tools', 'mod_ssl', 'openssl', 'net-snmp-utils', 'freeipmi', 'OpenIPMI-modalias']
+      state: present
+    become: true
+
+  - name: Install SuperMicro Perl Dependencies
+    yum:
+      name: ['perl-IPC-Run', 'perl-IO-Tty']
+      state: present
+    become: true
+    when: supermicro_enable_checks|bool
+
+  - name: Setup nagios SSL HTTPD vhost
+    copy: src=nagios.conf dest=/etc/httpd/conf.d/
+    become: true
+
+  - name: Install nagios packages and common plugins
+    yum:
+      name: ['nagios', 'nagios-common', 'nagios-plugins-ssh', 'nagios-plugins-tcp', 'nagios-plugins-http',
+      'nagios-plugins-load', 'nagios-plugins-nrpe', 'nagios-plugins-uptime', 'nagios-plugins-swap',
+      'nagios-plugins-ping', 'nagios-plugins-procs', 'nagios-plugins-users', 'nagios-plugins-disk',
+      'nagios-plugins-dns', 'libsemanage-python', python-requests]
+      state: present
+    become: true
+
+  - name: Check nagios Users
+    stat: path=/etc/nagios/passwd
+    ignore_errors: true
+    register: nagios_user_pwfile_exists
+    become: true
