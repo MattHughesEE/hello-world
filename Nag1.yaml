@@ -111,11 +111,6 @@
       
 ############ CHECK_MK ###############
 
-  #- name: Extra Packages for Enterprise Linux
-    #become: yes
-    #get_url:
-      #url: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-     # dest: /tmp/
   - name: Extra Packages for Enterprise Linux
     yum:
       name: 'https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm'
