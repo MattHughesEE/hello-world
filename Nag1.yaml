@@ -109,109 +109,51 @@
       
 ############ CHECK_MK ###############
 
-  - name: Wget dl fedora
-    become: yes
-    get_url:
-      url: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-      dest: /tmp/
-      
-  - name: Check if epel latest alrteady installed
-    become: yes
-    shell: "rpm -qa | grep epel"
-    ignore_errors: yes
-    register: output
-  - debug:
-      var=output
-   
-  - name: RPM
-    shell: rpm -ihv epel-release-latest-7.noarch.rpm
-    args:
-      chdir: /tmp/
-    when: output is failed
-      
-  - name: Optional Repos
-    become: yes
-    shell: "subscription-manager repos --enable=rhel-7-server-optional-rpms"
- 
+  #- name: Extra Packages for Enterprise Linux
+    #become: yes
+    #get_url:
+      #url: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+     # dest: /tmp/
+  - name: Extra Packages for Enterprise Linux
+    yum:
+      name: 'https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm'
+      state: present
+  
+  - name: Enable EPEL REPO
+    shell: yum-config-manager --enable rhel-7-server-optional-rpms
+    become: true
     
-  - name: Yum install
-    yum:
-      name:
-        - make
-        - gettext
-        - automake 
-        - autoconf
-        - openssl-devel
-        - net-snmp
-        - net-snmp-utils
-      state: installed
-      
-  - name:
-    yum:
-      name:
-        - perl-Net-SNMP
-
-  - name: Check Service NTP status
-    service:
-      name: ntpd
-      state: started
-  
-  - name: Enable ntpd service
-    systemd:
-      name: ntpd
-      enabled: yes
-      masked: no
-      
-  - name: Add firewall-cmd for NTP
-    shell: firewall-cmd --add-service=ntp --zone=public --permanent
-  
-  - name: Reload firewall
+  - name: Enable EPEL REPO
+    shell: yum-config-manager --enable rhel-7-server-extras-rpms
+    become: true
+    
+  - name: Enable web server Access to Network interfaces
+    shell: setsebool -P httpd_can_network_connect 1
+    become: true
+    
+  - name: Activate Firewall rule
+    shell: firewall-cmd --zone=public --add-service=http --permanent
+    become: true
+    
+  - name: Firewall rule 2
     shell: firewall-cmd --reload
-   
-  #- name: Install EPEL
-    #shell: yum install epel-release
-    #become: true
-  - name: Install epel-release via yum
-    yum:
-      name: epel-release
-      state: installed
-      
-  - name: Get Check_MK
-    get_url:
-      url: https://mathias-kettner.de/support/1.5.0p12/check-mk-raw-1.5.0p12-el7-38.x86_64.rpm
-      dest: /tmp/
+    become: true
     
+  - name: Check_MK Package installation
+    get_url:
+      url: https://checkmk.com/support/1.2.8p27/check-mk-raw-1.2.8p27-el7-50.x86_64.rpm
+      dest: /tmp/
+      
   - name: YUM install Check_MK and all of the dependencies
     yum:
-      name: /tmp/check-mk-raw-1.5.0p12-el7-38.x86_64.rpm
+      name: /tmp/check-mk-raw-1.2.80p27-el7-38.x86_64.rpm
       state: installed
-    
-  - name: Check OMD version
-    shell: omd version
-    register: output
+      
+  - name: Create Check_MK site
+    command: omd create master
+    register: site_creation
   - debug:
-      var=output
+      var=site_creation
       
-  - name: Check OMD sites
-    shell: omd sites
-    register: out
-  - debug:
-      var=out
-      
-  - name: Create Check_MK Server
-    shell: omd create pdxmonitor
-    register: output2
-    when: out is failed
-  - debug:
-      var=output2
-      
-  - name: omd start
-    shell: omd start pdxmonitor
-    register: output3
-  - debug:
-      var=output3
-      
-      
-
-    
-   
+  - name: Start site
+    command: omd start master
