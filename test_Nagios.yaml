@@ -9,6 +9,13 @@
   hosts: all
   
   tasks:
+  
+  - name: install the latest version of Apache from the testing repo
+    yum:
+      name: epel
+      enablerepo: rhel-7-server-optional-rpms
+      state: present
+    
   - name: Check Operating System
     fail:
       msg="You're not running a supported operating system (CentOS or RHEL 7+)"
