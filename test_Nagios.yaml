@@ -9,10 +9,12 @@
   hosts: all
   
   tasks:
-  
+  - name: TEST yum module
+    shell: yum-config-manager --enable rhel-7-server-optional-rpms
+    become: true
+    
   - name: install the latest version of Apache from the testing repo
     yum:
-      name: epel
       enablerepo: rhel-7-server-optional-rpms
       state: present
     
