@@ -2,6 +2,8 @@
 - name: Install Nagios and check_mk
   hosts: all
   become: true
+  vars:
+    site_name: slave1
   tasks:
   
   - name: Install the CORE prereqs
@@ -150,10 +152,10 @@
       state: installed
       
   - name: Create Check_MK site
-    command: omd create master
+    command: omd create "{{ site_name }}"
     register: site_creation
   - debug:
       var=site_creation
       
   - name: Start site
-    command: omd start master
+    command: omd start "{{ site_name }}"
