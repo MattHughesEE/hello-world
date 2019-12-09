@@ -128,6 +128,28 @@
     shell: setsebool -P httpd_can_network_connect 1
     become: true
     
+ #####################
+  - name: Determine if firewalld is in use
+    shell: systemctl is-enabled firewalld.service | egrep -qv 'masked|disabled'
+    ignore_errors: true
+    register: firewalld_in_use
+    no_log: true
+    become: true
+
+  - name: Determine if firewalld is active
+    shell: systemctl is-active firewalld.service | grep -vq inactive
+    ignore_errors: true
+    register: firewalld_is_active
+    no_log: true
+    become: true
+
+  - name: Determine if TCP/{{nagios_http_port}} is already active
+    shell: firewall-cmd --list-ports | egrep -q "^{{nagios_http_port}}/tcp"
+    ignore_errors: true
+    register: firewalld_nagios_http_port_exists
+    no_log: true
+    become: true
+    
   - name: Activate Firewall rule
     shell: firewall-cmd --zone=public --add-service=http --permanent
     become: true
