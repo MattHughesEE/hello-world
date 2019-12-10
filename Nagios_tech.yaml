@@ -1,0 +1,179 @@
+---
+- name: Install the CORE prereqs
+  yum:
+    name:
+      - gcc
+      - glibc
+      - glibc-common
+      - wget
+      - unzip
+      - httpd
+      - php
+      - gd
+      - gd-devel
+      - perl
+      - postfix
+      - ntp
+    state: installed
+  become: true
+      
+- name: Download the source
+  get_url:
+    url: https://github.com/NagiosEnterprises/nagioscore/archive/nagios-4.4.5.tar.gz
+    dest: /tmp/
+  become: true
+
+- name: Unarchive the nagios tar file
+  unarchive:
+    src: /tmp/nagioscore-nagios-4.4.5.tar.gz
+    dest: /tmp/
+    remote_src: yes
+  become: true
+
+- name: Compile (./configure)
+  shell: ./configure
+  args:
+    chdir: /tmp/nagioscore-nagios-4.4.5/
+  become: true
+
+- name: Make all
+  shell: make all
+  args:
+    chdir: /tmp/nagioscore-nagios-4.4.5/
+  become: true
+
+- name: Create Users and Groups
+  shell: make install-groups-users
+  args:
+    chdir: /tmp/nagioscore-nagios-4.4.5/
+  become: true
+
+- name: User Mod
+  shell: usermod -a -G nagios apache
+  args:
+    chdir: /tmp/nagioscore-nagios-4.4.5/
+  become: true
+
+- name: make install
+  shell: make install
+  args:
+    chdir: /tmp/nagioscore-nagios-4.4.5/
+  become: true
+
+- name: make install daemoninit
+  shell: make install-daemoninit
+  args:
+    chdir: /tmp/nagioscore-nagios-4.4.5/
+  become: true
+
+- name: Systemctl enable httpd service
+  shell: systemctl enable httpd.service
+  args:
+    chdir: /tmp/nagioscore-nagios-4.4.5/
+  become: true
+
+- name: Install command mode
+  shell: make install-commandmode
+  args:
+    chdir: /tmp/nagioscore-nagios-4.4.5/
+  become: true
+
+- name: Make install config
+  shell: make install-config
+  args:
+    chdir: /tmp/nagioscore-nagios-4.4.5/
+  become: true
+
+- name: Install webconf
+  shell: make install-webconf
+  args:
+    chdir: /tmp/nagioscore-nagios-4.4.5/
+  become: true
+
+- name: Start Firewalld
+  service:
+    name: firewalld
+    state: started
+  become: true
+
+- name: Firewall rule changes (Port 80)
+  shell: firewall-cmd --zone=public --add-port=80/tcp
+  args:
+    chdir: /tmp/nagioscore-nagios-4.4.5/
+  become: true
+
+- name: Firewall rule changes (Port 80 Permanent)
+  shell: firewall-cmd --zone=public --add-port=80/tcp --permanent
+  args:
+    chdir: /tmp/nagioscore-nagios-4.4.5/
+  become: true
+
+- name: Create Nagios Admin User Account
+  shell: htpasswd -bc /usr/local/nagios/etc/htpasswd.users nagiosadmin admin
+  args:
+    chdir: /tmp/nagioscore-nagios-4.4.5/
+  become: true
+
+- name: Start Apache Webserver (httpd Service)
+  service:
+    name: httpd
+    state: started
+  become: true
+
+- name: Start Service Daemon (Nagios)
+  service:
+    name: nagios
+    state: started
+  become: true
+
+############ CHECK_MK ###############
+
+- name: Extra Packages for Enterprise Linux
+  yum:
+    name: 'https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm'
+    state: present
+  become: true
+
+- name: Enable EPEL REPO
+  shell: yum-config-manager --enable rhel-7-server-optional-rpms
+  become: true
+    
+- name: Enable EPEL REPO
+  shell: yum-config-manager --enable rhel-7-server-extras-rpms
+  become: true
+    
+- name: Enable web server Access to Network interfaces
+  shell: setsebool -P httpd_can_network_connect 1
+  become: true
+    
+- name: Activate Firewall rule
+  shell: firewall-cmd --zone=public --add-service=http --permanent
+  become: true
+    
+- name: Firewall rule 2
+  shell: firewall-cmd --reload
+  become: true
+    
+- name: Check_MK Package installation
+  get_url:
+    url: https://checkmk.com/support/1.2.8p27/check-mk-raw-1.2.8p27-el7-50.x86_64.rpm 
+    dest: /tmp/
+  become: true
+
+- name: YUM install Check_MK and all of the dependencies
+  yum:
+    name: /tmp/check-mk-raw-1.2.8p27-el7-50.x86_64.rpm
+    state: installed
+  become: true
+
+- name: Create Check_MK site
+  command: omd create dev_monitor_01
+  become: true
+  register: site_creation
+- debug:
+    var=site_creation
+  become: true
+
+- name: Start site
+  command: omd start dev_monitor_01
+  become: true
