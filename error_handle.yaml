@@ -12,7 +12,7 @@
   - debug:
       var=output
       
-  - name: Test omd status slave1
+  - name: Test omd status slave1 (stopped)
     command: omd status slave1
     ignore_errors: yes
     become: true
@@ -21,17 +21,12 @@
       var=output2
       
   - name: Test omd status when site does not exist
-    command: omd status fake
+    command: omd status DNE
     ignore_errors: yes
     become: true
     register: result_fake
   - debug:
       var=result_fake
-  
-  - name: Create site
-    command: omd create test
-    when: output is succeeded
-    become: true
     
     
   #- name: Test return code
