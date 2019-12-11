@@ -1,0 +1,16 @@
+---
+- name: Install Nagios and check_mk
+  hosts: all
+  become: true
+  tasks:
+  
+  - name: Test omd status
+    command: omd create test
+    ignore_errors: yes
+    become: true
+    register: output
+  - debug:
+      var=output
+      
+      
+    
