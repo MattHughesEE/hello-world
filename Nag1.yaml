@@ -130,23 +130,28 @@
     
  #####################
     
-  #- name: Activate Firewall rule
-    #shell: firewall-cmd --zone=public --add-service=http --permanent
-    #become: true
+  - name: Activate Firewall rule
+    shell: firewall-cmd --zone=public --add-service=http --permanent
+    become: true
     
-  #- name: Firewall rule 2
-    #shell: firewall-cmd --reload
-    #become: true
+  - name: Firewall rule 2
+    shell: firewall-cmd --reload
+    become: true
     
-  - name: Check_MK Package installation
-    get_url:
-      url: https://checkmk.com/support/1.2.8p27/check-mk-raw-1.2.8p27-el7-50.x86_64.rpm 
-      dest: /tmp/
+  #- name: Check_MK Package installation
+    #get_url:
+      #url: https://checkmk.com/support/1.2.8p27/check-mk-raw-1.2.8p27-el7-50.x86_64.rpm 
+      #dest: /tmp/
       
-  - name: YUM install Check_MK and all of the dependencies
-    yum:
-      name: /tmp/check-mk-raw-1.2.8p27-el7-50.x86_64.rpm
-      state: installed
+  #- name: YUM install Check_MK and all of the dependencies
+    #yum:
+      #name: /tmp/check-mk-raw-1.2.8p27-el7-50.x86_64.rpm
+      #state: installed
+  - name: Testing new check_mk tar
+    unarchive: 
+      src: /tmp/check_mk128p15.tar.gz
+      dest: /opt/
+      remote_src: yes
       
   - name: Create Check_MK site
     command: omd create "{{ site_name }}"
