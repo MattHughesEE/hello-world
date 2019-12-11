@@ -11,15 +11,23 @@
     register: output
   - debug:
       var=output
-      
+
+  - name: Test omd status when site does not exist
+    command: omd status fake
+    ignore_errors: yes
+    become: true
+    register: result_fake
+  - debug:
+      var=result_fake
+  
   - name: Create site
     command: omd create test
-    when: output is failed
+    when: output is succeeded
     become: true
     
-  - name: Test return code
-    command: omd create test2
-    when: output.rc == 0
+  #- name: Test return code
+    #command: omd create test2
+   # when: output.rc == 0
     
       
       
