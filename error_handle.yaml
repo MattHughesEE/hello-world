@@ -5,12 +5,22 @@
   tasks:
   
   - name: Test omd status
-    command: omd create test
+    command: omd status test
     ignore_errors: yes
     become: true
     register: output
   - debug:
       var=output
+      
+  - name: Create site
+    command: omd create test
+    when: output is failed
+    become: true
+    
+ - name: Test return code
+   command: omd create test2
+   when: output.rc == 0
+    
       
       
     
