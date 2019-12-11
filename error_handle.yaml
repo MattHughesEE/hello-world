@@ -5,7 +5,7 @@
   tasks:
   
   - name: Test omd status
-    command: omd sites
+    command: omd status
     ignore_errors: yes
     become: true
     register: output
