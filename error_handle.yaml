@@ -4,14 +4,22 @@
   become: true
   tasks:
   
-  - name: Test omd status
+  - name: Test omd status not specified
     command: omd status
     ignore_errors: yes
     become: true
     register: output
   - debug:
       var=output
-
+      
+  - name: Test omd status slave1
+    command: omd status slave1
+    ignore_errors: yes
+    become: true
+    register: output2
+  - debug:
+      var=output2
+      
   - name: Test omd status when site does not exist
     command: omd status fake
     ignore_errors: yes
