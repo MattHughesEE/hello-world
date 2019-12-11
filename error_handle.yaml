@@ -17,9 +17,9 @@
     when: output is failed
     become: true
     
- - name: Test return code
-   command: omd create test2
-   when: output.rc == 0
+  - name: Test return code
+    command: omd create test2
+    when: output.rc == 0
     
       
       
